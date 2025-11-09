@@ -1,4 +1,4 @@
-﻿// ----------------------------------------------------
+// ----------------------------------------------------
 // Copyright (c) Mabrouk Mahdhi. All rights reserved.
 // Made with love for Update Conference Prague 2025.
 // ----------------------------------------------------
@@ -6,18 +6,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoInject.Attributes.TransientAttributes;
-using EFxceptions;
+using DemoEFxceptions.Brokers.Storages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace DemoEFxceptions.Brokers.Storages
+namespace DemoEFxceptions.Brokers.DefaultStorages
 {
-    [Transient(typeof(IStorageBroker))]
-    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
+    [Transient(typeof(IStorageBroker), "DSB")]
+    public partial class DefaultStorageBroker : DbContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
 
-        public StorageBroker(IConfiguration configuration)
+        public DefaultStorageBroker(IConfiguration configuration)
         {
             this.configuration = configuration;
             this.Database.Migrate();
@@ -38,7 +38,7 @@ namespace DemoEFxceptions.Brokers.Storages
 
         private async ValueTask<T> InsertAsync<T>(T @object)
         {
-            var broker = new StorageBroker(this.configuration);
+            var broker = new DefaultStorageBroker(this.configuration);
             broker.Entry(@object).State = EntityState.Added;
             await broker.SaveChangesAsync();
 
@@ -47,21 +47,21 @@ namespace DemoEFxceptions.Brokers.Storages
 
         private IQueryable<T> SelectAll<T>() where T : class
         {
-            var broker = new StorageBroker(this.configuration);
+            var broker = new DefaultStorageBroker(this.configuration);
 
             return broker.Set<T>();
         }
 
         private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class
         {
-            var broker = new StorageBroker(this.configuration);
+            var broker = new DefaultStorageBroker(this.configuration);
 
             return await broker.FindAsync<T>(objectIds);
         }
 
         private async ValueTask<T> UpdateAsync<T>(T @object)
         {
-            var broker = new StorageBroker(this.configuration);
+            var broker = new DefaultStorageBroker(this.configuration);
             broker.Entry(@object).State |= EntityState.Modified;
             await broker.SaveChangesAsync();
 
@@ -70,13 +70,11 @@ namespace DemoEFxceptions.Brokers.Storages
 
         private async ValueTask<T> DeleteAsync<T>(T @object)
         {
-            var broker = new StorageBroker(this.configuration);
+            var broker = new DefaultStorageBroker(this.configuration);
             broker.Entry(@object).State = EntityState.Deleted;
             await broker.SaveChangesAsync();
 
             return @object;
         }
-
-        public override void Dispose() { }
     }
 }

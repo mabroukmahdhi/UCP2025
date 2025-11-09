@@ -3,6 +3,7 @@
 // Made with love for Update Conference Prague 2025.
 // ----------------------------------------------------
 
+using AutoInject;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +20,7 @@ namespace DemoEFxceptions
 
             webApplicationBuilder.Services.AddControllers();
             webApplicationBuilder.Services.AddOpenApi();
+            webApplicationBuilder.Services.UseAutoInjection();
 
             WebApplication webApplication =
                 webApplicationBuilder.Build();

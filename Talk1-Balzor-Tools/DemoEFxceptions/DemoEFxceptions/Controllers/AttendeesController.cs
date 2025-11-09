@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DemoEFxceptions.Brokers.Storages;
 using DemoEFxceptions.Models.Foundations.Attendees;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using RESTFulSense.Controllers;
 
 namespace DemoEFxceptions.Controllers
@@ -11,16 +12,31 @@ namespace DemoEFxceptions.Controllers
     [Route("api/[controller]")]
     public class AttendeesController : RESTFulController
     {
-        private readonly IStorageBroker storageBroker;
+        private readonly IStorageBroker defaultStorageBroker;
+        private readonly IStorageBroker meaningfulStorageBroker;
 
-        public AttendeesController(IStorageBroker storageBroker) =>
-            this.storageBroker = storageBroker;
+        public AttendeesController(
+            [FromKeyedServices("MSB")] IStorageBroker meaningfulStorageBroker,
+            [FromKeyedServices("DSB")] IStorageBroker defaultStorageBroker)
+        {
+            this.meaningfulStorageBroker = meaningfulStorageBroker;
+            this.defaultStorageBroker = defaultStorageBroker;
+        }
 
         [HttpPost]
         public async ValueTask<ActionResult<Attendee>> PostAttendeeAsync(Attendee attendee)
         {
             Attendee addedAttendee =
-                    await this.storageBroker.InsertAttendeeAsync(attendee);
+                    await this.meaningfulStorageBroker.InsertAttendeeAsync(attendee);
+
+            return Created(addedAttendee);
+        }
+
+        [HttpPost("default")]
+        public async ValueTask<ActionResult<Attendee>> DefaultPostAttendeeAsync(Attendee attendee)
+        {
+            Attendee addedAttendee =
+                    await this.defaultStorageBroker.InsertAttendeeAsync(attendee);
 
             return Created(addedAttendee);
         }
@@ -29,7 +45,7 @@ namespace DemoEFxceptions.Controllers
         public ActionResult<IQueryable<Attendee>> GetAllAttendees()
         {
             IQueryable<Attendee> retrievedAttendees =
-                    this.storageBroker.SelectAllAttendees();
+                    this.meaningfulStorageBroker.SelectAllAttendees();
 
             return Ok(retrievedAttendees);
         }
