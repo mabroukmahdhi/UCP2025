@@ -1,6 +1,6 @@
 ﻿// ----------------------------------------------------
 // Copyright (c) Mabrouk Mahdhi. All rights reserved.
-// Made with ❤️ for Update Conference Prague 2025.
+// Made with love for Update Conference Prague 2025.
 // ----------------------------------------------------
 
 using Microsoft.AspNetCore.Builder;
