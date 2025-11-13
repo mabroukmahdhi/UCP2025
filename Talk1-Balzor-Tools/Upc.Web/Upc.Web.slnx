@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Upc.Web.Tests.Unit/Upc.Web.Tests.Unit.csproj" />
+  <Project Path="Upc.Web/Upc.Web.csproj" />
+</Solution>

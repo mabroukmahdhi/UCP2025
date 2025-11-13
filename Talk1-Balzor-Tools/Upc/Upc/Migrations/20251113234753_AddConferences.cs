@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Upc.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMig : Migration
+    public partial class AddConferences : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,24 @@ namespace Upc.Migrations
                 {
                     table.PrimaryKey("PK_Attendees", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Conferences",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsVirtual = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conferences", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -35,6 +53,9 @@ namespace Upc.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Attendees");
+
+            migrationBuilder.DropTable(
+                name: "Conferences");
         }
     }
 }
