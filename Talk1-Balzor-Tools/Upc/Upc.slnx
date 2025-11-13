@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Upc.Tests.Unit/Upc.Tests.Unit.csproj" Id="25eca143-9ac5-4c82-b7b6-780e2663584f" />
+  <Project Path="Upc/Upc.csproj" />
+</Solution>
