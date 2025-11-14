@@ -1,0 +1,135 @@
+@* Header.razor *@
+
+<header class="survey-header">
+    <div class="survey-header-inner">
+        <div class="survey-header-left">
+            <div class="survey-header-logo">
+                <i class="fa-solid fa-microphone survey-header-logo-icon"></i>
+            </div>
+            <div class="survey-header-text">
+                <h1 class="survey-header-title">@ConferenceName</h1>
+                <p class="survey-header-subtitle">@Subtitle</p>
+            </div>
+        </div>
+
+        <div class="survey-header-right">
+            @if (IsLive)
+            {
+                <div class="survey-header-live-pill">
+                    <i class="fa-solid fa-circle survey-header-live-dot"></i>
+                    <span>Live Event</span>
+                </div>
+            }
+
+            <img src="@AvatarUrl"
+                 alt="User avatar"
+                 class="survey-header-avatar" />
+        </div>
+    </div>
+</header>
+
+<style>
+    .survey-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .survey-header-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .survey-header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .survey-header-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+        background-color: #2563eb;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .survey-header-logo-icon {
+        font-size: 1.1rem;
+    }
+
+    .survey-header-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .survey-header-title {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .survey-header-subtitle {
+        margin: 0.1rem 0 0 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .survey-header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .survey-header-live-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        background-color: #dcfce7;
+        color: #166534;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .survey-header-live-dot {
+        font-size: 0.6rem;
+    }
+
+    .survey-header-avatar {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 9999px;
+        object-fit: cover;
+    }
+
+    @@media (max-width: 640px) {
+        .survey-header-inner {
+            padding-inline: 1rem;
+        }
+
+        .survey-header-title {
+            font-size: 1.05rem;
+        }
+
+        .survey-header-subtitle {
+            font-size: 0.8rem;
+        }
+
+        .survey-header-live-pill {
+            display: none;
+        }
+    }
+</style>

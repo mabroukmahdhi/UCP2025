@@ -1,0 +1,45 @@
+﻿@using LiveMade.Views.Components.Headers
+@inherits LayoutComponentBase
+
+<div class="survey-app-root">
+    <HeaderComponent ConferenceName="TechConf 2024"
+            Subtitle="Conference Survey Platform"
+            IsLive="true"
+            AvatarUrl="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" />
+
+    <main class="survey-main-body">
+        @Body
+    </main>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background-color: #f9fafb;
+    }
+
+    .survey-app-root {
+        min-height: 100vh;
+        background-color: #f9fafb;
+    }
+
+    .survey-main-body {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 3rem 1.5rem;
+    }
+
+    @@media (max-width: 768px) {
+        .survey-main-body {
+            padding: 1.5rem 1rem 2rem 1rem;
+        }
+    }
+</style>

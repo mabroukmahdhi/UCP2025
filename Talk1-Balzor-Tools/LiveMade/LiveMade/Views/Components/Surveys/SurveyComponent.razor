@@ -1,0 +1,737 @@
+
+<div class="survey-layout">
+    <section class="survey-talks-section">
+        <div class="survey-card">
+            <div class="survey-card-header">
+                <h2 class="survey-card-title">Conference Talks</h2>
+                <div class="survey-card-header-right">
+                    <select class="survey-select"
+                            @bind="SelectedTrackFilter">
+                        <option>All Tracks</option>
+                        <option>Technical</option>
+                        <option>Business</option>
+                        <option>Design</option>
+                    </select>
+
+                    <div class="survey-talks-count">
+                        <span class="survey-talks-count-number">@TotalTalks</span>
+                        <span class="survey-talks-count-text">talks available</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="survey-talks-list">
+                @foreach (var talk in FilteredTalks)
+                {
+                    <article class="survey-talk-row">
+                        <div class="survey-talk-row-main">
+                            <div class="survey-talk-meta">
+                                <span class="survey-track-pill @GetTrackClass(talk.Track)">
+                                    @talk.Track
+                                </span>
+                                <span class="survey-talk-meta-text">@talk.Time</span>
+                                <span class="survey-talk-meta-text">@talk.Room</span>
+                            </div>
+
+                            <h3 class="survey-talk-title">@talk.Title</h3>
+
+                            <p class="survey-talk-description">
+                                @talk.Description
+                            </p>
+
+                            <div class="survey-talk-footer">
+                                <div class="survey-speaker">
+                                    <img class="survey-speaker-avatar"
+                                         src="@talk.SpeakerAvatarUrl"
+                                         alt="@talk.Speaker" />
+                                    <span class="survey-speaker-name">@talk.Speaker</span>
+                                </div>
+
+                                <div class="survey-rating-summary">
+                                    <div class="survey-stars-readonly">
+                                        @for (var starIndex = 1; starIndex <= 5; starIndex++)
+                                        {
+                                            <i class="@GetAverageStarIconClass(talk.AverageRating, starIndex) survey-star-readonly-icon"></i>
+                                        }
+                                    </div>
+                                    <span class="survey-rating-text">
+                                        @GetAverageRatingText(talk)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button"
+                                class="survey-rate-button"
+                                @onclick="() => OpenRatingModal(talk)">
+                            <i class="fa-solid fa-star survey-rate-button-icon"></i>
+                            <span>Rate Talk</span>
+                        </button>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    <aside class="survey-sidebar">
+        <div class="survey-card survey-sidebar-card">
+            <h3 class="survey-sidebar-title">Survey Progress</h3>
+            <div class="survey-progress-content">
+                <div class="survey-progress-row">
+                    <span class="survey-progress-label">Talks Rated</span>
+                    <span class="survey-progress-value">@RatedTalks of @TotalTalks</span>
+                </div>
+                <div class="survey-progress-bar-outer">
+                    <div class="survey-progress-bar-inner"
+                         style="width: @ProgressPercentString"></div>
+                </div>
+                <p class="survey-progress-hint">
+                    Complete your survey to receive a certificate of participation.
+                </p>
+            </div>
+        </div>
+
+        <div class="survey-card survey-sidebar-card">
+            <h3 class="survey-sidebar-title">Recent Ratings</h3>
+
+            @if (RecentRatings.Count == 0)
+            {
+                <p class="survey-empty-recent">
+                    No ratings yet. Start by rating a talk.
+                </p>
+            }
+            else
+            {
+                <div class="survey-recent-list">
+                    @foreach (var rating in RecentRatings)
+                    {
+                        <div class="survey-recent-item">
+                            <div class="survey-recent-main">
+                                <p class="survey-recent-title">@rating.TruncatedTitle</p>
+                                <div class="survey-stars-readonly survey-recent-stars">
+                                    @for (var starIndex = 1; starIndex <= 5; starIndex++)
+                                    {
+                                        <i class="@GetAverageStarIconClass(rating.Rating, starIndex) survey-star-readonly-icon"></i>
+                                    }
+                                </div>
+                            </div>
+                            <span class="survey-recent-score">
+                                @rating.Rating.ToString("0")/5
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </aside>
+</div>
+
+@if (IsModalOpen)
+{
+    <div class="survey-modal-overlay">
+        <div class="survey-modal">
+            <div class="survey-modal-header">
+                <h3 class="survey-modal-title">Rate This Talk</h3>
+                <button type="button"
+                        class="survey-modal-close"
+                        @onclick="CloseRatingModal">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <div class="survey-modal-talk">
+                <h4 class="survey-modal-talk-title">@CurrentTalkTitle</h4>
+                <p class="survey-modal-speaker">@CurrentSpeakerName</p>
+            </div>
+
+            <div class="survey-modal-section">
+                <label class="survey-label">Overall Rating</label>
+                <div class="survey-modal-rating-row">
+                    <div class="survey-modal-stars">
+                        @for (var starIndex = 1; starIndex <= 5; starIndex++)
+                        {
+                            <button type="button"
+                                    class="survey-star-button"
+                                    @onclick="() => SetRating(starIndex)">
+                                <i class="@GetInteractiveStarIconClass(starIndex)"></i>
+                            </button>
+                        }
+                    </div>
+                    <span class="survey-modal-rating-text">
+                        @RatingLabel
+                    </span>
+                </div>
+            </div>
+
+            <div class="survey-modal-section">
+                <label class="survey-label">Comments (Optional)</label>
+                <textarea class="survey-textarea"
+                      rows="4"
+                      @bind="CommentText"
+                      placeholder="Share your thoughts about this talk...">
+                </textarea>
+            </div>
+
+            <div class="survey-modal-actions">
+                <button type="button"
+                        class="survey-button-secondary"
+                        @onclick="CloseRatingModal">
+                    Cancel
+                </button>
+                <button type="button"
+                        class="survey-button-primary"
+                        @onclick="SubmitRating">
+                    Submit Rating
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .survey-layout {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+
+    .survey-talks-section {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .survey-sidebar {
+        width: 20rem;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .survey-card {
+        background-color: #ffffff;
+        border-radius: 0.9rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .survey-card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .survey-card-title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .survey-card-header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .survey-select {
+        padding: 0.45rem 0.85rem;
+        border-radius: 0.6rem;
+        border: 1px solid #d1d5db;
+        font-size: 0.85rem;
+        color: #374151;
+        background-color: #ffffff;
+        outline: none;
+    }
+
+        .survey-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+        }
+
+    .survey-talks-count {
+        display: flex;
+        align-items: baseline;
+        gap: 0.25rem;
+    }
+
+    .survey-talks-count-number {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-talks-count-text {
+        color: #6b7280;
+        font-size: 0.8rem;
+    }
+
+    .survey-talks-list {
+        border-radius: 0 0 0.9rem 0.9rem;
+    }
+
+    .survey-talk-row {
+        padding: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        border-top: 1px solid #e5e7eb;
+        transition: background-color 0.15s ease;
+    }
+
+        .survey-talk-row:first-child {
+            border-top: none;
+        }
+
+        .survey-talk-row:hover {
+            background-color: #f9fafb;
+        }
+
+    .survey-talk-row-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .survey-talk-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .survey-track-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.65rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .survey-track-technical {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .survey-track-business {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .survey-track-design {
+        background-color: #ede9fe;
+        color: #6d28d9;
+    }
+
+    .survey-talk-meta-text {
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .survey-talk-title {
+        margin: 0 0 0.4rem 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-talk-description {
+        margin: 0 0 0.8rem 0;
+        font-size: 0.88rem;
+        color: #4b5563;
+        line-height: 1.5;
+    }
+
+    .survey-talk-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.25rem;
+    }
+
+    .survey-speaker {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .survey-speaker-avatar {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 9999px;
+        object-fit: cover;
+    }
+
+    .survey-speaker-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .survey-rating-summary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .survey-stars-readonly {
+        display: inline-flex;
+        gap: 0.1rem;
+    }
+
+    .survey-star-readonly-icon {
+        font-size: 0.7rem;
+    }
+
+    .survey-rating-text {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .survey-rate-button {
+        border: none;
+        outline: none;
+        padding: 0.5rem 0.9rem;
+        border-radius: 0.6rem;
+        background-color: #2563eb;
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background-color 0.15s ease, transform 0.05s ease;
+    }
+
+        .survey-rate-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .survey-rate-button:active {
+            transform: scale(0.98);
+        }
+
+    .survey-rate-button-icon {
+        font-size: 0.8rem;
+    }
+
+    /* Sidebar */
+
+    .survey-sidebar-card {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .survey-sidebar-title {
+        margin: 0 0 0.9rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-progress-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .survey-progress-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.85rem;
+    }
+
+    .survey-progress-label {
+        color: #4b5563;
+    }
+
+    .survey-progress-value {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-progress-bar-outer {
+        width: 100%;
+        border-radius: 9999px;
+        background-color: #e5e7eb;
+        height: 0.35rem;
+        overflow: hidden;
+    }
+
+    .survey-progress-bar-inner {
+        height: 100%;
+        border-radius: 9999px;
+        background: linear-gradient(to right, #2563eb, #4f46e5);
+        transition: width 0.25s ease;
+    }
+
+    .survey-progress-hint {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .survey-empty-recent {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .survey-recent-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .survey-recent-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.6rem 0.7rem;
+        border-radius: 0.6rem;
+        background-color: #f9fafb;
+    }
+
+    .survey-recent-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .survey-recent-title {
+        margin: 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #111827;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .survey-recent-stars {
+        margin-top: 0.2rem;
+    }
+
+    .survey-recent-score {
+        margin-left: 0.75rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+        white-space: nowrap;
+    }
+
+    /* Modal */
+
+    .survey-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 60;
+        padding: 1rem;
+    }
+
+    .survey-modal {
+        max-width: 26rem;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 0.9rem;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+        padding: 1.35rem 1.4rem;
+    }
+
+    .survey-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.9rem;
+    }
+
+    .survey-modal-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-modal-close {
+        border: none;
+        background: none;
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 0.2rem;
+        border-radius: 9999px;
+    }
+
+        .survey-modal-close:hover {
+            color: #4b5563;
+            background-color: #f3f4f6;
+        }
+
+    .survey-modal-talk {
+        margin-bottom: 1rem;
+    }
+
+    .survey-modal-talk-title {
+        margin: 0 0 0.15rem 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .survey-modal-speaker {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .survey-modal-section {
+        margin-bottom: 1rem;
+    }
+
+    .survey-label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .survey-modal-rating-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .survey-modal-stars {
+        display: inline-flex;
+        gap: 0.15rem;
+    }
+
+    .survey-star-button {
+        border: none;
+        background: none;
+        padding: 0.1rem;
+        cursor: pointer;
+    }
+
+        .survey-star-button i {
+            font-size: 1.4rem;
+            transition: color 0.15s ease, transform 0.05s ease;
+        }
+
+        .survey-star-button:hover i {
+            transform: translateY(-1px);
+        }
+
+    .survey-modal-rating-text {
+        font-size: 0.8rem;
+        color: #6b7280;
+        min-width: 4.5rem;
+    }
+
+    .survey-textarea {
+        width: 100%;
+        border-radius: 0.6rem;
+        border: 1px solid #d1d5db;
+        font-size: 0.8rem;
+        padding: 0.45rem 0.6rem;
+        resize: vertical;
+        outline: none;
+        font-family: inherit;
+        color: #111827;
+    }
+
+        .survey-textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .survey-textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+        }
+
+    .survey-modal-actions {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 0.75rem;
+    }
+
+    .survey-button-secondary,
+    .survey-button-primary {
+        flex: 1;
+        border-radius: 0.6rem;
+        padding: 0.45rem 0.7rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        transition: background-color 0.15s ease, color 0.15s ease, transform 0.05s ease;
+    }
+
+    .survey-button-secondary {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+
+        .survey-button-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+    .survey-button-primary {
+        background-color: #2563eb;
+        color: #ffffff;
+    }
+
+        .survey-button-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .survey-button-secondary:active,
+        .survey-button-primary:active {
+            transform: scale(0.98);
+        }
+
+    /* Responsive */
+
+    @@media (max-width: 992px) {
+        .survey-layout {
+            flex-direction: column;
+        }
+
+        .survey-sidebar {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .survey-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .survey-card-header-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .survey-talk-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .survey-rate-button {
+            margin-top: 0.75rem;
+        }
+    }
+</style>
