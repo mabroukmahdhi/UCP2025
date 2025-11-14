@@ -4,20 +4,24 @@
 
 using Microsoft.AspNetCore.Components;
 
-namespace Upc.Web.Views.Components.Welcomes
+namespace Upc.Web.Views.Components.Headers
 {
-    public partial class WelcomeComponent : ComponentBase
+    public partial class HeaderComponent : ComponentBase
     {
         [Inject]
-        protected NavigationManager NavigationManager { get; set; }
+        protected NavigationManager NavigationManager { get; set; } 
 
-        void NavigateToAttendees()
+        protected void NavigateToWelcome()
         {
-            // Adjust routes when you have real pages
+            this.NavigationManager.NavigateTo("/");
+        }
+
+        protected void NavigateToAttendees()
+        {
             this.NavigationManager.NavigateTo("/attendees");
         }
 
-        void NavigateToConferences()
+        protected void NavigateToConferences()
         {
             this.NavigationManager.NavigateTo("/conferences");
         }

@@ -1,3 +1,280 @@
-<div>
-        <h3>Prosiria generated WelcomeComponent</h3>
-</div>
+<main id="main-welcome" class="cn-page">
+    <section id="hero-section" class="cn-hero">
+        <div class="cn-hero-inner">
+            <h2 class="cn-hero-title">
+                Welcome to Conference Navigator
+            </h2>
+            <p class="cn-hero-text">
+                Your simple, intuitive app designed for effectively navigating large conferences.
+                Access attendee information and conference details all in one place.
+            </p>
+            <div class="cn-hero-divider"></div>
+        </div>
+    </section>
+
+    <section id="navigation-cards" class="cn-card-grid">
+        <div id="attendees-card"
+             class="cn-card cn-card-clickable"
+             @onclick="NavigateToAttendees">
+            <div class="cn-card-inner">
+                <div class="cn-card-icon-circle">
+                    <i class="fa-solid fa-users cn-card-icon-symbol"></i>
+                </div>
+                <h3 class="cn-card-title">Attendees List</h3>
+                <p class="cn-card-text">
+                    View and manage all conference attendees. Access contact information,
+                    registration details, and participant data.
+                </p>
+                <button type="button" class="cn-card-button">
+                    View Attendees
+                </button>
+            </div>
+        </div>
+
+        <div id="conferences-card"
+             class="cn-card cn-card-clickable"
+             @onclick="NavigateToConferences">
+            <div class="cn-card-inner">
+                <div class="cn-card-icon-circle">
+                    <i class="fa-solid fa-calendar-days cn-card-icon-symbol"></i>
+                </div>
+                <h3 class="cn-card-title">Conference List</h3>
+                <p class="cn-card-text">
+                    Browse all conferences with details including dates, locations,
+                    virtual options, and scheduling information.
+                </p>
+                <button type="button" class="cn-card-button">
+                    View Conferences
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="features-section" class="cn-features">
+        <div class="cn-features-header">
+            <h3 class="cn-features-title">Key Features</h3>
+            <p class="cn-features-subtitle">
+                Everything you need to navigate conferences effectively
+            </p>
+        </div>
+
+        <div class="cn-features-grid">
+            <div id="feature-1" class="cn-feature-item">
+                <div class="cn-feature-icon-circle">
+                    <i class="fa-solid fa-search cn-feature-icon-symbol"></i>
+                </div>
+                <h4 class="cn-feature-title">Easy Search</h4>
+                <p class="cn-feature-text">
+                    Quickly find attendees and conferences with intuitive search functionality.
+                </p>
+            </div>
+
+            <div id="feature-2" class="cn-feature-item">
+                <div class="cn-feature-icon-circle">
+                    <i class="fa-solid fa-mobile-alt cn-feature-icon-symbol"></i>
+                </div>
+                <h4 class="cn-feature-title">Responsive Design</h4>
+                <p class="cn-feature-text">
+                    Access your conference information from any device, anywhere.
+                </p>
+            </div>
+
+            <div id="feature-3" class="cn-feature-item">
+                <div class="cn-feature-icon-circle">
+                    <i class="fa-solid fa-clock cn-feature-icon-symbol"></i>
+                </div>
+                <h4 class="cn-feature-title">Real-time Updates</h4>
+                <p class="cn-feature-text">
+                    Stay informed with the latest conference and attendee information.
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .cn-page {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 4rem 1.5rem;
+        box-sizing: border-box;
+    }
+
+    /* Hero */
+
+    .cn-hero {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .cn-hero-inner {
+        max-width: 40rem;
+        margin: 0 auto;
+    }
+
+    .cn-hero-title {
+        margin: 0 0 1.5rem 0;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-hero-text {
+        margin: 0 0 2rem 0;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #6C757D;
+    }
+
+    .cn-hero-divider {
+        width: 6rem;
+        height: 0.25rem;
+        margin: 0 auto;
+        border-radius: 999px;
+        background-color: #007BFF;
+    }
+
+    /* Navigation Cards */
+
+    .cn-card-grid {
+        max-width: 56rem;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2rem;
+    }
+
+    .cn-card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        padding: 2rem;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .cn-card-clickable {
+        cursor: pointer;
+    }
+
+    .cn-card:hover {
+        box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .cn-card-inner {
+        text-align: center;
+    }
+
+    .cn-card-icon-circle {
+        width: 5rem;
+        height: 5rem;
+        margin: 0 auto 1.5rem auto;
+        border-radius: 999px;
+        background-color: #007BFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cn-card-icon-symbol {
+        color: #ffffff;
+        font-size: 1.5rem;
+    }
+
+    .cn-card-title {
+        margin: 0 0 1rem 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-card-text {
+        margin: 0 0 2rem 0;
+        font-size: 0.98rem;
+        line-height: 1.7;
+        color: #6C757D;
+    }
+
+    .cn-card-button {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid #007BFF;
+        background-color: #007BFF;
+        color: #ffffff;
+        font-size: 0.98rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .cn-card-button:hover {
+            background-color: #005fcc;
+            box-shadow: 0 6px 18px rgba(0, 123, 255, 0.35);
+        }
+
+    /* Features */
+
+    .cn-features {
+        margin-top: 5rem;
+    }
+
+    .cn-features-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .cn-features-title {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-features-subtitle {
+        margin: 0;
+        font-size: 0.98rem;
+        color: #6C757D;
+    }
+
+    .cn-features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+    }
+
+    .cn-feature-item {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .cn-feature-icon-circle {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto 1rem auto;
+        border-radius: 999px;
+        background-color: #dbeafe; /* light blue */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cn-feature-icon-symbol {
+        color: #007BFF;
+        font-size: 1.25rem;
+    }
+
+    .cn-feature-title {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .cn-feature-text {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #6C757D;
+    }
+</style>

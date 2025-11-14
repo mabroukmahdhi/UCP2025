@@ -1,0 +1,102 @@
+<header id="header" class="cn-header">
+    <div class="cn-header-container">
+        <div class="cn-header-left">
+            <div class="cn-logo-icon">
+                <i class="fa-solid fa-map-location-dot cn-logo-icon-symbol"></i>
+            </div>
+            <h1 class="cn-header-title">Conference Navigator</h1>
+        </div>
+
+        <nav class="cn-nav">
+            <a href=""
+               class="cn-nav-link cn-nav-link-active"
+               @onclick="NavigateToWelcome"
+               @onclick:preventDefault="true">
+                Welcome
+            </a>
+            <a href=""
+               class="cn-nav-link"
+               @onclick="NavigateToAttendees"
+               @onclick:preventDefault="true">
+                Attendees
+            </a>
+            <a href=""
+               class="cn-nav-link"
+               @onclick="NavigateToConferences"
+               @onclick:preventDefault="true">
+                Conferences
+            </a>
+        </nav>
+    </div>
+</header>
+
+<style>
+    .cn-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    .cn-header-container {
+        max-width: 72rem; /* 1152px */
+        margin: 0 auto;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
+
+    .cn-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .cn-logo-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        background-color: #007BFF;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cn-logo-icon-symbol {
+        color: #ffffff;
+        font-size: 1.1rem;
+    }
+
+    .cn-header-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+    }
+
+    .cn-nav {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .cn-nav-link {
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #6C757D;
+        transition: color 0.2s ease;
+    }
+
+        .cn-nav-link:hover {
+            color: #111827;
+        }
+
+    .cn-nav-link-active {
+        color: #007BFF;
+    }
+</style>

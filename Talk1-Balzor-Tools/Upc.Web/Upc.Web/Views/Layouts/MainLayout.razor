@@ -1,3 +1,47 @@
-﻿@inherits LayoutComponentBase
+﻿@using Upc.Web.Views.Components.Footers
+@using Upc.Web.Views.Components.Headers
 
-@Body
+@inherits LayoutComponentBase
+
+<div class="cn-app-root">
+    <HeaderComponent />
+
+    <main class="cn-main-host">
+        @Body
+    </main>
+
+    <FooterComponent />
+</div>
+
+<style>
+    :root {
+        --cn-primary: #007BFF;
+        --cn-accent: #6C757D;
+        --cn-bg: #F3F4F6;
+        --cn-text: #111827;
+    }
+
+    .cn-app-root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--cn-bg);
+        font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .cn-main-host {
+        flex: 1;
+        display: block;
+    }
+
+    /* Hide scrollbars while still allowing scroll */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background-color: var(--cn-bg);
+    }
+</style>
