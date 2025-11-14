@@ -1,3 +1,597 @@
-<div>
-        <h3>Prosiria generated ConferencesComponent</h3>
+<div class="cn-page cn-conferences-page">
+    <!-- Page Header -->
+    <section class="cn-conferences-header">
+        <div class="cn-conferences-header-main">
+            <div class="cn-conferences-header-text">
+                <h2 class="cn-conferences-title">Conference List</h2>
+                <p class="cn-conferences-subtitle">
+                    Manage and view all conference details.
+                </p>
+            </div>
+
+            <button type="button"
+                    class="cn-conferences-add-button"
+                    @onclick="OnAddConferenceClicked">
+                <i class="fa-solid fa-plus cn-conferences-add-icon"></i>
+                <span>Add Conference</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="cn-conferences-filters-section">
+        <div class="cn-conferences-filters">
+            <div class="cn-conferences-filter-item">
+                <label class="cn-conferences-filter-label">
+                    Search Conferences
+                </label>
+                <div class="cn-conferences-search-wrapper">
+                    <i class="fa-solid fa-search cn-conferences-search-icon"></i>
+                    <input class="cn-conferences-search-input"
+                           placeholder="Search by name or location..."
+                           @bind="SearchText"
+                           @bind:event="oninput" />
+                </div>
+            </div>
+
+            <div class="cn-conferences-filter-item">
+                <label class="cn-conferences-filter-label">
+                    Start Date
+                </label>
+                <input type="date"
+                       class="cn-conferences-date-input" />
+            </div>
+
+            <div class="cn-conferences-filter-item">
+                <label class="cn-conferences-filter-label">
+                    Type
+                </label>
+                <select class="cn-conferences-select-input"
+                        @bind="TypeFilterKey">
+                    <option value="">All Types</option>
+                    <option value="virtual">Virtual</option>
+                    <option value="in-person">In-Person</option>
+                </select>
+            </div>
+
+            <div class="cn-conferences-filter-item cn-conferences-filter-actions">
+                <button type="button"
+                        class="cn-conferences-clear-button"
+                        @onclick="ClearFilters">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conferences Grid -->
+    <section class="cn-conferences-grid">
+        @if (PagedConferences.Count == 0)
+        {
+            <div class="cn-conferences-empty">
+                <i class="fa-regular fa-calendar-xmark cn-conferences-empty-icon"></i>
+                <p class="cn-conferences-empty-text">
+                    No conferences match your filters. Try adjusting the search or date.
+                </p>
+            </div>
+        }
+        else
+        {
+            @foreach (var conference in PagedConferences)
+            {
+                <article class="cn-conference-card">
+                    <div class="cn-conference-card-header">
+                        <div class="cn-conference-card-header-main">
+                            <h3 class="cn-conference-name">@conference.Name</h3>
+                            <span class="@conference.StatusBadgeClass">
+                                @conference.StatusText
+                            </span>
+                        </div>
+
+                        <div class="cn-conference-card-actions">
+                            <button type="button"
+                                    class="cn-conference-icon-button"
+                                    title="Edit conference"
+                                    @onclick="() => OnEditConference(conference)">
+                                <i class="fa-solid fa-edit"></i>
+                            </button>
+                            <button type="button"
+                                    class="cn-conference-icon-button cn-conference-icon-button-danger"
+                                    title="Delete conference"
+                                    @onclick="() => OnDeleteConference(conference)">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cn-conference-meta-grid">
+                        <div class="cn-conference-meta-item">
+                            <i class="fa-solid fa-calendar cn-conference-meta-icon"></i>
+                            <span class="cn-conference-meta-text">
+                                @conference.DateRangeText
+                            </span>
+                        </div>
+                        <div class="cn-conference-meta-item">
+                            <i class="@conference.LocationIconClass"></i>
+                            <span class="cn-conference-meta-text">
+                                @conference.LocationText
+                            </span>
+                        </div>
+                        <div class="cn-conference-meta-item">
+                            <i class="@conference.TypeIconClass"></i>
+                            <span class="@conference.TypeChipClass">
+                                @conference.TypeText
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="cn-conference-description">
+                        @conference.Description
+                    </p>
+
+                    <div class="cn-conference-footer">
+                        <span class="cn-conference-footer-item">
+                            <i class="fa-solid fa-users cn-conference-footer-icon"></i>
+                            @conference.AttendeeCountText
+                        </span>
+                        <span class="cn-conference-footer-item">
+                            <i class="fa-solid fa-clock cn-conference-footer-icon"></i>
+                            @conference.CreatedAtText
+                        </span>
+                    </div>
+                </article>
+            }
+        }
+    </section>
+
+    <!-- Pagination -->
+    @if (TotalPages > 1)
+    {
+        <section class="cn-conferences-pagination">
+            <div class="cn-conferences-pagination-inner">
+                <button type="button"
+                        class="cn-conferences-page-button"
+                        disabled="@IsPreviousDisabled"
+                        @onclick="GoToPreviousPage">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                @for (int pageIndex = 1; pageIndex <= TotalPages; pageIndex++)
+                {
+                    <button type="button"
+                            class="@(pageIndex == CurrentPage ? "cn-conferences-page-button cn-conferences-page-button-active" : "cn-conferences-page-button")"
+                            @onclick="() => GoToPage(pageIndex)">
+                        @pageIndex
+                    </button>
+                }
+
+                <button type="button"
+                        class="cn-conferences-page-button"
+                        disabled="@IsNextDisabled"
+                        @onclick="GoToNextPage">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+    }
 </div>
+
+<style>
+    .cn-conferences-page {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 4rem 1.5rem;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+
+    .cn-conferences-header {
+        margin-bottom: 1.75rem;
+    }
+
+    .cn-conferences-header-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .cn-conferences-title {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-conferences-subtitle {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #6C757D;
+    }
+
+    .cn-conferences-add-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        border: none;
+        background-color: #007BFF;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 123, 255, 0.35);
+        transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .cn-conferences-add-button:hover {
+        background-color: #005fcc;
+        box-shadow: 0 10px 22px rgba(0, 123, 255, 0.45);
+        transform: translateY(-1px);
+    }
+
+    .cn-conferences-add-icon {
+        font-size: 0.9rem;
+    }
+
+    /* Filters */
+
+    .cn-conferences-filters-section {
+        margin-bottom: 2rem;
+    }
+
+    .cn-conferences-filters {
+        background-color: #ffffff;
+        border-radius: 0.9rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        padding: 1.5rem;
+        box-sizing: border-box;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .cn-conferences-filter-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cn-conferences-filter-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.45rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .cn-conferences-search-wrapper {
+        position: relative;
+    }
+
+    .cn-conferences-search-input {
+        width: 100%;
+        padding: 0.7rem 0.9rem 0.7rem 2.4rem;
+        border-radius: 0.7rem;
+        border: 1px solid #d1d5db;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        background-color: #ffffff;
+        color: #111827;
+        box-sizing: border-box;
+    }
+
+    .cn-conferences-search-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .cn-conferences-search-input:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+
+    .cn-conferences-search-icon {
+        position: absolute;
+        left: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+
+    .cn-conferences-date-input,
+    .cn-conferences-select-input {
+        width: 100%;
+        padding: 0.6rem 0.9rem;
+        border-radius: 0.7rem;
+        border: 1px solid #d1d5db;
+        font-size: 0.9rem;
+        outline: none;
+        background-color: #ffffff;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        color: #111827;
+        box-sizing: border-box;
+    }
+
+    .cn-conferences-date-input:focus,
+    .cn-conferences-select-input:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+
+    .cn-conferences-filter-actions {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .cn-conferences-clear-button {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border-radius: 0.7rem;
+        border: none;
+        background-color: #f3f4f6;
+        color: #6C757D;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cn-conferences-clear-button:hover {
+        background-color: #e5e7eb;
+        color: #111827;
+    }
+
+    /* Grid / Cards */
+
+    .cn-conferences-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .cn-conference-card {
+        background-color: #ffffff;
+        border-radius: 0.9rem;
+        border: 1px solid #e5e7eb;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        box-sizing: border-box;
+        transition: box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .cn-conference-card:hover {
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .cn-conference-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cn-conference-card-header-main {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .cn-conference-name {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-conference-status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+
+    .cn-conference-status-active {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .cn-conference-status-virtual {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .cn-conference-status-upcoming {
+        background-color: #fef9c3;
+        color: #854d0e;
+    }
+
+    .cn-conference-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .cn-conference-icon-button {
+        border: none;
+        background: none;
+        padding: 0.4rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #6C757D;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cn-conference-icon-button:hover {
+        background-color: #eef2ff;
+        color: #007BFF;
+    }
+
+    .cn-conference-icon-button-danger:hover {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .cn-conference-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .cn-conference-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        color: #6C757D;
+    }
+
+    .cn-conference-meta-icon {
+        font-size: 0.9rem;
+        color: #6C757D;
+    }
+
+    .cn-conference-description {
+        margin: 0 0 0.9rem 0;
+        font-size: 0.88rem;
+        color: #4b5563;
+        line-height: 1.6;
+    }
+
+    .cn-conference-footer {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        font-size: 0.82rem;
+        color: #6C757D;
+        flex-wrap: wrap;
+    }
+
+    .cn-conference-footer-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .cn-conference-footer-icon {
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+
+    .cn-conference-type-chip {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        white-space: nowrap;
+    }
+
+    .cn-conference-type-virtual {
+        background-color: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+    }
+
+    .cn-conference-type-inperson {
+        background-color: #ecfdf3;
+        border-color: #bbf7d0;
+        color: #166534;
+    }
+
+    /* Empty state */
+
+    .cn-conferences-empty {
+        padding: 3rem 1rem;
+        text-align: center;
+        border-radius: 0.9rem;
+        border: 1px dashed #d1d5db;
+        background-color: #f9fafb;
+        color: #6C757D;
+    }
+
+    .cn-conferences-empty-icon {
+        font-size: 1.75rem;
+        color: #cbd5f5;
+        margin-bottom: 0.75rem;
+    }
+
+    .cn-conferences-empty-text {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Pagination */
+
+    .cn-conferences-pagination {
+        margin-top: 2.5rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .cn-conferences-pagination-inner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 999px;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+    }
+
+    .cn-conferences-page-button {
+        min-width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 999px;
+        border: none;
+        background: none;
+        padding: 0 0.6rem;
+        font-size: 0.85rem;
+        color: #6C757D;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cn-conferences-page-button:hover:not(:disabled) {
+        background-color: #eef2ff;
+        color: #007BFF;
+    }
+
+    .cn-conferences-page-button-active {
+        background-color: #007BFF;
+        color: #ffffff;
+    }
+
+    .cn-conferences-page-button:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+
+    @@media (max-width: 640px) {
+        .cn-conference-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cn-conference-card-actions {
+            align-self: flex-end;
+        }
+    }
+</style>

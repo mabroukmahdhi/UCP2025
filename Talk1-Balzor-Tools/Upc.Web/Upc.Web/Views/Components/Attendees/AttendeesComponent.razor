@@ -1,16 +1,8 @@
+@using Upc.Web.Views.Components.AttendeesHeroes
 <div class="cn-page cn-attendees-page">
     <!-- Header / Hero -->
-    <section class="cn-attendees-hero">
-        <div class="cn-attendees-hero-inner">
-            <h2 class="cn-attendees-hero-title">
-                Attendees
-            </h2>
-            <p class="cn-attendees-hero-text">
-                Browse and manage all conference attendees. Search, filter, and quickly access key contact details.
-            </p>
-            <div class="cn-attendees-hero-divider"></div>
-        </div>
-    </section>
+    <AttendeesHeroComponent />
+    
 
     <!-- Toolbar -->
     <section class="cn-attendees-toolbar-section">
@@ -112,39 +104,7 @@
         margin: 0 auto;
         padding: 3rem 1.5rem 4rem 1.5rem;
         box-sizing: border-box;
-    }
-
-    /* Hero */
-
-    .cn-attendees-hero {
-        text-align: left;
-        margin-bottom: 2.5rem;
-    }
-
-    .cn-attendees-hero-inner {
-        max-width: 40rem;
-    }
-
-    .cn-attendees-hero-title {
-        margin: 0 0 1rem 0;
-        font-size: 2rem;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .cn-attendees-hero-text {
-        margin: 0 0 1.75rem 0;
-        font-size: 1rem;
-        line-height: 1.6;
-        color: #6C757D;
-    }
-
-    .cn-attendees-hero-divider {
-        width: 4rem;
-        height: 0.22rem;
-        border-radius: 999px;
-        background-color: #007BFF;
-    }
+    } 
 
     /* Toolbar */
 
