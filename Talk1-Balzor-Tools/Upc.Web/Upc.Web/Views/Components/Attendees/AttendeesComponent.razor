@@ -1,3 +1,419 @@
-<div>
-        <h3>Prosiria generated AttendeesComponent</h3>
+<div class="cn-page cn-attendees-page">
+    <!-- Header / Hero -->
+    <section class="cn-attendees-hero">
+        <div class="cn-attendees-hero-inner">
+            <h2 class="cn-attendees-hero-title">
+                Attendees
+            </h2>
+            <p class="cn-attendees-hero-text">
+                Browse and manage all conference attendees. Search, filter, and quickly access key contact details.
+            </p>
+            <div class="cn-attendees-hero-divider"></div>
+        </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="cn-attendees-toolbar-section">
+        <div class="cn-attendees-toolbar">
+            <div class="cn-attendees-search">
+                <i class="fa-solid fa-magnifying-glass cn-attendees-search-icon"></i>
+                <input class="cn-attendees-search-input"
+                       placeholder="Search by name, company, role, or email..."
+                       @bind="SearchText"
+                       @bind:event="oninput" />
+            </div>
+
+            <div class="cn-attendees-stats">
+                <div class="cn-attendees-stat-item">
+                    <span class="cn-attendees-stat-label">Total</span>
+                    <span class="cn-attendees-stat-value">@Attendees.Count</span>
+                </div>
+                <div class="cn-attendees-stat-item">
+                    <span class="cn-attendees-stat-label">Visible</span>
+                    <span class="cn-attendees-stat-value">@FilteredAttendees.Count</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attendees Table -->
+    <section class="cn-attendees-table-section">
+        <div class="cn-attendees-table-wrapper">
+            <table class="cn-attendees-table">
+                <thead>
+                    <tr class="cn-attendees-table-header-row">
+                        <th class="cn-attendees-table-header-cell cn-attendees-col-name">Name</th>
+                        <th class="cn-attendees-table-header-cell cn-attendees-col-company">Company</th>
+                        <th class="cn-attendees-table-header-cell cn-attendees-col-role">Role</th>
+                        <th class="cn-attendees-table-header-cell cn-attendees-col-email">Email</th>
+                        <th class="cn-attendees-table-header-cell cn-attendees-col-tag">Tag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (FilteredAttendees.Count == 0)
+                    {
+                        <tr class="cn-attendees-table-empty-row">
+                            <td class="cn-attendees-table-empty-cell" colspan="5">
+                                <div class="cn-attendees-empty-state">
+                                    <i class="fa-regular fa-face-frown cn-attendees-empty-icon"></i>
+                                    <p class="cn-attendees-empty-text">
+                                        No attendees match your search. Try adjusting your filters.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var attendee in FilteredAttendees)
+                        {
+                            <tr class="cn-attendees-table-row">
+                                <td class="cn-attendees-table-cell cn-attendees-cell-name">
+                                    <div class="cn-attendees-name-wrapper">
+                                        <div class="cn-attendees-avatar">
+                                            <span class="cn-attendees-avatar-initials">
+                                                @attendee.Initials
+                                            </span>
+                                        </div>
+                                        <div class="cn-attendees-name-text">
+                                            <span class="cn-attendees-name">@attendee.FullName</span>
+                                            <span class="cn-attendees-location">@attendee.Location</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cn-attendees-table-cell">
+                                    <span class="cn-attendees-company">@attendee.Company</span>
+                                </td>
+                                <td class="cn-attendees-table-cell">
+                                    <span class="cn-attendees-role">@attendee.Role</span>
+                                </td>
+                                <td class="cn-attendees-table-cell">
+                                    <a href="mailto:@attendee.Email" class="cn-attendees-email">
+                                        @attendee.Email
+                                    </a>
+                                </td>
+                                <td class="cn-attendees-table-cell">
+                                    <span class="cn-attendees-tag">
+                                        @attendee.Tag
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
+
+<style>
+    .cn-attendees-page {
+        max-width: 72rem;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 4rem 1.5rem;
+        box-sizing: border-box;
+    }
+
+    /* Hero */
+
+    .cn-attendees-hero {
+        text-align: left;
+        margin-bottom: 2.5rem;
+    }
+
+    .cn-attendees-hero-inner {
+        max-width: 40rem;
+    }
+
+    .cn-attendees-hero-title {
+        margin: 0 0 1rem 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .cn-attendees-hero-text {
+        margin: 0 0 1.75rem 0;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #6C757D;
+    }
+
+    .cn-attendees-hero-divider {
+        width: 4rem;
+        height: 0.22rem;
+        border-radius: 999px;
+        background-color: #007BFF;
+    }
+
+    /* Toolbar */
+
+    .cn-attendees-toolbar-section {
+        margin-bottom: 1.75rem;
+    }
+
+    .cn-attendees-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .cn-attendees-search {
+        position: relative;
+        max-width: 26rem;
+        width: 100%;
+    }
+
+    .cn-attendees-search-input {
+        width: 100%;
+        padding: 0.7rem 0.9rem 0.7rem 2.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid #d1d5db;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        background-color: #ffffff;
+        color: #111827;
+        box-sizing: border-box;
+    }
+
+        .cn-attendees-search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .cn-attendees-search-input:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+    .cn-attendees-search-icon {
+        position: absolute;
+        left: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.9rem;
+        color: #9ca3af;
+    }
+
+    .cn-attendees-stats {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+    }
+
+    .cn-attendees-stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.5rem;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        min-width: 4.5rem;
+    }
+
+    .cn-attendees-stat-label {
+        color: #6C757D;
+        font-size: 0.75rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .cn-attendees-stat-value {
+        color: #111827;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    @@media (max-width: 640px) {
+        .cn-attendees-toolbar {
+            align-items: stretch;
+        }
+
+        .cn-attendees-stats {
+            width: 100%;
+            justify-content: flex-start;
+        }
+    }
+
+    /* Table */
+
+    .cn-attendees-table-section {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        padding: 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .cn-attendees-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .cn-attendees-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 640px;
+    }
+
+    .cn-attendees-table-header-row {
+        background-color: #f9fafb;
+    }
+
+    .cn-attendees-table-header-cell {
+        text-align: left;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+        color: #6C757D;
+        padding: 0.75rem 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    .cn-attendees-col-name {
+        min-width: 200px;
+    }
+
+    .cn-attendees-col-company {
+        min-width: 160px;
+    }
+
+    .cn-attendees-col-role {
+        min-width: 160px;
+    }
+
+    .cn-attendees-col-email {
+        min-width: 200px;
+    }
+
+    .cn-attendees-col-tag {
+        min-width: 120px;
+    }
+
+    .cn-attendees-table-row:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .cn-attendees-table-row:hover {
+        background-color: #eef2ff;
+    }
+
+    .cn-attendees-table-cell {
+        padding: 0.75rem 0.75rem;
+        font-size: 0.9rem;
+        color: #111827;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+    }
+
+    /* Name cell with avatar */
+
+    .cn-attendees-name-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .cn-attendees-avatar {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #007BFF, #38bdf8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .cn-attendees-avatar-initials {
+        text-transform: uppercase;
+    }
+
+    .cn-attendees-name-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cn-attendees-name {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.15rem;
+    }
+
+    .cn-attendees-location {
+        font-size: 0.8rem;
+        color: #6C757D;
+    }
+
+    .cn-attendees-company {
+        font-weight: 500;
+        color: #111827;
+    }
+
+    .cn-attendees-role {
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .cn-attendees-email {
+        color: #007BFF;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+        .cn-attendees-email:hover {
+            text-decoration: underline;
+        }
+
+    .cn-attendees-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #1f2933;
+        background-color: #e0f2fe;
+        border: 1px solid #bfdbfe;
+        white-space: nowrap;
+    }
+
+    /* Empty state */
+
+    .cn-attendees-table-empty-row:hover {
+        background-color: transparent;
+    }
+
+    .cn-attendees-table-empty-cell {
+        padding: 2.5rem 0.75rem;
+        border-bottom: none;
+    }
+
+    .cn-attendees-empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        color: #6C757D;
+    }
+
+    .cn-attendees-empty-icon {
+        font-size: 1.5rem;
+        color: #cbd5f5;
+    }
+
+    .cn-attendees-empty-text {
+        margin: 0;
+        font-size: 0.9rem;
+        text-align: center;
+        max-width: 18rem;
+    }
+</style>
