@@ -1,0 +1,15 @@
+@using SharpStyles.Extensions
+
+<div>
+    <h3>Inspect me</h3>
+    <input type="text" @bind=@Style.H3.Color
+           style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+</div>
+
+<p>
+    @((MarkupString)Style?.ToStyleCss())
+</p>
+
+<style>
+    @Style?.ToStyleCss()
+</style>
