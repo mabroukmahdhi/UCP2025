@@ -15,10 +15,11 @@ namespace Upc.Web
         {
             WebApplicationBuilder webApplicationBuilder =
                 WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
+             
             webApplicationBuilder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            webApplicationBuilder.Services.AddHttpClient();
 
             WebApplication webApplication =
                 webApplicationBuilder.Build();

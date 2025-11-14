@@ -7,4 +7,9 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Campsis.AutoInject" Version="0.2.0" />
+    <PackageReference Include="RESTFulSense" Version="3.2.0" />
+  </ItemGroup>
+
 </Project>
